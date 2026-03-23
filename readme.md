@@ -1,140 +1,163 @@
-# ⚙️ Webpack + Biome Template
+# Balanced Binary Search Tree (BST)
 
-A **modern, minimal Webpack boilerplate** for front-end development — preconfigured with **Biome** for formatting and linting, and ready for **GitHub Pages deployment** using automated npm scripts.
+## Description
 
----
-
-## 🧱 Folder Structure
-
-```
-project/
-├── src/
-│   ├── index.js
-│   ├── style.css
-│   └── template.html
-├── dist/
-├── webpack.dev.js
-├── webpack.prod.js
-├── package.json
-├── biome.json
-└── .gitignore
-```
+This project is a from-scratch implementation of a **Balanced Binary Search Tree (BST)** in JavaScript.
+It focuses on understanding tree structures, recursion, and efficient data manipulation without relying on arrays after initialization.
 
 ---
 
-## ⚙️ Setup Instructions
+## Features
 
-### 1️⃣ Initialize Project
+- Build a balanced BST from an array
+- Insert and delete nodes while maintaining BST properties
+- Search for values efficiently
+- Traverse the tree using:
+    - Level Order (BFS)
+    - In Order
+    - Pre Order
+    - Post Order
 
-Install all dependencies:
+- Calculate:
+    - Height of a node
+    - Depth of a node
+
+- Check if the tree is balanced
+- Rebalance an unbalanced tree
+
+---
+
+## Tech Stack
+
+- JavaScript (ES6+)
+- No external libraries
+
+---
+
+## Project Structure
+
+```
+.
+├── Node.js        # Node factory/class
+├── Tree.js        # Tree factory/class with all methods
+├── prettyPrint.js # Tree visualization helper (optional)
+└── driver.js      # Script to test functionality
+```
+
+---
+
+## How It Works
+
+### 1. Tree Initialization
+
+- Takes an array
+- Removes duplicates
+- Sorts values
+- Builds a balanced BST using recursion
+
+---
+
+### 2. Core Operations
+
+#### Insert
+
+Adds a value while maintaining BST rules.
+
+#### Delete
+
+Handles:
+
+- Leaf nodes
+- Nodes with one child
+- Nodes with two children
+
+#### Search
+
+Efficient lookup using BST traversal logic.
+
+---
+
+### 3. Traversals
+
+- **Level Order (BFS)** → Uses a queue
+- **In Order** → Sorted output
+- **Pre Order**
+- **Post Order**
+
+Each traversal accepts a callback function.
+
+---
+
+### 4. Tree Properties
+
+- **Height** → Longest path from node to leaf
+- **Depth** → Distance from node to root
+
+---
+
+### 5. Balance
+
+#### isBalanced()
+
+Checks if the tree is balanced at **every node**.
+
+#### rebalance()
+
+- Collects values using traversal
+- Rebuilds tree using `buildTree()`
+
+---
+
+## Usage
+
+### Run Driver Script
 
 ```bash
-npm run setup
+node driver.js
 ```
 
 ---
 
-### 2️⃣ Start Development Server
+## Example Flow
 
-```bash
-npm start
-```
-
-* Runs Webpack Dev Server with live reload.
-* Default mode: development with `eval-source-map`.
-
----
-
-### 3️⃣ Build for Production
-
-```bash
-npm run build
-```
-
-* Creates an optimized, minified build in `/dist`.
+1. Generate random numbers (< 100)
+2. Build tree
+3. Confirm tree is balanced
+4. Print traversals
+5. Insert large numbers (> 100) to unbalance
+6. Confirm tree is unbalanced
+7. Rebalance tree
+8. Confirm tree is balanced again
 
 ---
 
-### 4️⃣ Lint & Format Code
+## Key Learnings
 
-```bash
-npm run lint-format
-```
-
-Biome automatically:
-
-* ✅ Auto-sorts imports
-* ✅ Enforces linting and code quality
-* ✅ Maintains consistent formatting across JS, CSS, and HTML
+- Recursion in real-world problems
+- Tree traversal techniques (BFS vs DFS)
+- Managing references instead of arrays
+- Writing clean, modular JavaScript
 
 ---
 
-### 5️⃣ Deploy to GitHub Pages
+## Common Mistakes
 
-#### 🔹Deployment
-
-```bash
-npm run deploy
-```
-recomended to reset before redeploy
-**Workflow:**
-
-1. Creates the `gh-pages` branch if it doesn’t exist.
-2. Merges `main` into `gh-pages`.
-3. Builds `/dist` and commits it temporarily.
-4. Pushes `/dist` subtree to `gh-pages`.
-5. Returns to `main` and removes `/dist`.
+- Using the original array after building the tree
+- Ignoring duplicate handling
+- Incorrect delete logic
+- Only checking balance at root
 
 ---
 
-#### 🔹 Reset gh-pages branch
+## Future Improvements
 
-```bash
-npm run reset
-```
-***deletes remote and local gh-pages branch***
-
----
-
-#### 🔹 Enable GitHub Pages
-
-1. Go to **Settings → Pages** in your GitHub repository.
-2. Source: **Deploy from branch**
-3. Branch: `gh-pages`, Folder: `/ (root)`
-4. Save — your site will be live in a few minutes. 🎉
+- Add `find(value)` method
+- Implement iterative traversal methods
+- Visualize tree using DOM
+- Add test cases
 
 ---
 
-## 🧩 Tech Stack
+## Author
 
-| Tool                     | Purpose                                      |
-| ------------------------ | -------------------------------------------- |
-| **Webpack 5**            | Module bundler for modern JS apps            |
-| **Biome 2.3.4**          | Fast formatter, linter, and import organizer |
-| **HTML Webpack Plugin**  | Generates HTML with bundled scripts          |
-| **CSS & Style Loaders**  | Handles CSS imports and injection            |
-| **Clean Webpack Plugin** | Cleans `/dist` before each build             |
-| **ES Modules**           | Fully ESM-based configuration                |
-
----
-
-## 🗂️ .gitignore
-
-```
-node_modules/
-dist/
-.DS_Store
-package-lock.json
-webpack.dev.js
-webpack.prod.js
-```
-
----
-
-## 🧰 Notes
-
-* Supports **development** and **production** environments.
-* Uses **ESM imports** (`import/export` syntax).
-* Automatically cleans `dist/` on each build.
-* Biome ensures code consistency and speed in place of Prettier + ESLint.
-* **Deployment workflow is fully automated** — first deploy and redeploy handled via npm scripts.
+Aayush – Front-End Developer in training
