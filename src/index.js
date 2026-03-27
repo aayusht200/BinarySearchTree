@@ -54,4 +54,49 @@ class Tree {
         if (node.data > value) return this._find(node.left, value);
         return this._find(node.right, value);
     }
+    delete(value) {
+        this.root = this._delete(this.root, value);
+    }
+    _delete(node, value) {
+        if (node === null) return null;
+        if (value < node.data) node.left = this._delete(node.left, value);
+        else if (value > node.data) node.right = this._delete(node.right, value);
+        else {
+            if (node.left == null && node.right == null) {
+                return null;
+            }
+            if (node.left === null) return node.right;
+            if (node.right === null) return node.left;
+            let successor = this.min(node.right);
+            node.data = successor.data;
+            node.right = this._delete(node.right, successor.data);
+        }
+        return node;
+    }
+    min(node) {
+        if (!node) return null;
+        while (node.left) {
+            node = node.left;
+        }
+        return node;
+    }
+    max(node) {
+        if (!node) return null;
+        while (node.right) {
+            node = node.right;
+        }
+        return node;
+    }
+    levelOrderForEach(node) {
+        if (node === null) return null;
+        let tempQue = [node];
+        let result = [];
+        while (tempQue.length) {
+            let tempLen = tempQue.length;
+            result.push(tempQue);
+            while (tempLen--) {
+                
+            }
+        }
+    }
 }
