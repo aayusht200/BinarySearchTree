@@ -1,7 +1,7 @@
 import './style.css';
 class Node {
-    constructor(data, left, right) {
-        this.data = data;
+    constructor(value) {
+        this.data = value;
         this.left = null;
         this.right = null;
     }
@@ -10,40 +10,27 @@ class Tree {
     constructor(dataArr) {
         dataArr = this.cleanArr(dataArr);
         this.root = this.buildTree(dataArr);
+        console.log(this.root);
     }
     cleanArr(dataArr) {
-        dataArr = [...new Set(dataArr)];
-        dataArr = dataArr.sort(function (a, b) {
-            return a - b;
-        });
-        return dataArr;
+        return [...new Set(dataArr)].sort((a, b) => a - b);
     }
     buildTree(dataArr) {
         if (dataArr.length <= 0) return null;
-        let middleIndex = Math.floor(dataArr.length / 2);
-        let rootNode = new Node(dataArr[middleIndex]);
-        rootNode.left = this.buildTree(dataArr.slice(0, middleIndex));
-        rootNode.right = this.buildTree(dataArr.slice(middleIndex + 1));
+        let midPoint = Math.floor(dataArr.length / 2);
+        let rootNode = new Node(dataArr[midPoint]);
+        rootNode.left = this.buildTree(dataArr.slice(0, midPoint));
+        rootNode.right = this.buildTree(dataArr.slice(midPoint + 1));
         return rootNode;
     }
-    includes(value) {
-        return this._includes(this.root, value);
+    include(value) {
+        return this._include(this.root, value);
     }
-    _includes(node, value) {
+    _include(node, value) {
         if (node === null) return false;
         if (node.data === value) return true;
-        if (node.data > value) return this._includes(node.left, value);
-        return this._includes(node.right, value);
-    }
-    insert(value) {
-        this.root = this._insert(this.root, value);
-    }
-    _insert(node, value) {
-        if (node === null) return new Node(value);
-        if (node.data === value) return node;
-        if (value < node.data) node.left = this._insert(node.left, value);
-        if (value > node.data) node.right = this._insert(node.right, value);
-        return node;
+        if (value < node.data) return this._include(node.left, value);
+        else return this._include(node.right, value);
     }
     find(value) {
         return this._find(this.root, value);
@@ -51,8 +38,17 @@ class Tree {
     _find(node, value) {
         if (node === null) return null;
         if (node.data === value) return node;
-        if (node.data > value) return this._find(node.left, value);
-        return this._find(node.right, value);
+        if (value < node.data) return this._find(node.left, value);
+        else return this._find(node.right, value);
+    }
+    insert(value) {
+        this.root = this._insert(this.root, value);
+    }
+    _insert(node, value) {
+        if (!node) return new Node(value);
+        if (value < node.data) node.left = this._insert(node.left, value);
+        if (value > node.data) node.right = this._insert(node.right, value);
+        return node;
     }
     delete(value) {
         this.root = this._delete(this.root, value);
@@ -62,11 +58,9 @@ class Tree {
         if (value < node.data) node.left = this._delete(node.left, value);
         else if (value > node.data) node.right = this._delete(node.right, value);
         else {
-            if (node.left == null && node.right == null) {
-                return null;
-            }
-            if (node.left === null) return node.right;
-            if (node.right === null) return node.left;
+            if (node.left === null && node.right === null) return null;
+            if (node.left === null) node.right = this._delete(node.right, value);
+            if (node.right === null) node.left = this._delete(node.left, value);
             let successor = this.min(node.right);
             node.data = successor.data;
             node.right = this._delete(node.right, successor.data);
@@ -74,78 +68,67 @@ class Tree {
         return node;
     }
     min(node) {
-        if (!node) return null;
-        while (node.left) {
+        while (node.left != null) {
             node = node.left;
-        }
-        return node;
-    }
-    max(node) {
-        if (!node) return null;
-        while (node.right) {
-            node = node.right;
         }
         return node;
     }
     levelOrder() {
         if (this.root === null) return [];
-        let result = [];
-        let dataQue = [this.root];
-        while (dataQue.length > 0) {
-            let current = dataQue[0];
-            result.push(current.data);
-            if (current.left) dataQue.push(current.left);
-            if (current.right) dataQue.push(current.right);
-            dataQue.shift();
+        let resultArr = [];
+        let tempArr = [this.root];
+        while (tempArr.length > 0) {
+            let current = tempArr.shift();
+            resultArr.push(current.data);
+            if (current.left) tempArr.push(current.left);
+            if (current.right) tempArr.push(current.right);
         }
-        return result;
+        return resultArr;
     }
-    levelOrderForEach(callback) {
-        if (this.root === null) return;
-        let queue = [this.root];
-        while (queue.length > 0) {
-            let current = queue.shift();
-            callback(current.data);
-            if (current.left) queue.push(current.left);
-            if (current.right) queue.push(current.right);
+    levelOrderCallBackFunction(callBackFunction) {
+        if (this.root === null) return null;
+        let tempArr = [this.root];
+        while (tempArr.length > 0) {
+            let current = tempArr.shift();
+            if (current.left) {
+                tempArr.push(current.left);
+            }
+            if (current.right) tempArr.push(current.right);
+            callBackFunction(current.data);
         }
     }
     inOrder() {
-        let result = [];
-        this._inOrder(this.root, result);
-        return result;
+        let resultArr = [];
+        this._inOrder(this.root, resultArr);
+        return resultArr;
     }
-    _inOrder(node, result) {
-        if (node == null) return;
-        this._inOrder(node.left, result);
-        result.push(node.data);
-        this._inOrder(node.right, result);
+    _inOrder(node, resultArr) {
+        if (!node) return;
+        this._inOrder(node.left, resultArr);
+        resultArr.push(node.data);
+        this._inOrder(node.right, resultArr);
     }
     preOrder() {
-        let result = [];
-        this._preOrder(this.root, result);
-        return result;
+        let resultArr = [];
+        this._preOrder(this.root, resultArr);
+        return resultArr;
     }
-
-    _preOrder(node, result) {
-        if (node === null) return;
-
-        result.push(node.data);
-        this._preOrder(node.left, result);
-        this._preOrder(node.right, result);
+    _preOrder(node, resultArr) {
+        if (!node) return;
+        resultArr.push(node.data);
+        this._preOrder(node.left, resultArr);
+        this._preOrder(node.right, resultArr);
     }
-
     postOrder() {
-        let result = [];
-        this._postOrder(this.root, result);
-        return result;
+        let resultArr = [];
+        this._postOrder(this.root, resultArr);
+        return resultArr;
     }
-
-    _postOrder(node, result) {
-        if (node === null) return;
-        this._postOrder(node.left, result);
-        this._postOrder(node.right, result);
-        result.push(node.data);
+    _postOrder(node, resultArr) {
+        if (!node) return;
+        this._postOrder(node.left, resultArr);
+        this._postOrder(node.right, resultArr);
+        resultArr.push(node.data);
     }
     height(node = this.root) {
         if (node === null) return -1;
@@ -155,16 +138,16 @@ class Tree {
         return this._depth(this.root, value);
     }
     _depth(node, value) {
-        if (node === null) return -1;
+        if (!node) return -1;
         if (node.data === value) return 0;
         if (value < node.data) {
             let result = this._depth(node.left, value);
-            if (result === -1) return -1;
+            if (value === node.data) return -1;
             return result + 1;
         }
         if (value > node.data) {
             let result = this._depth(node.right, value);
-            if (result === -1) return -1;
+            if (value === node.data) return -1;
             return result + 1;
         }
     }
@@ -180,19 +163,29 @@ class Tree {
         this.root = this.buildTree(arr);
     }
 }
-//[2, 5, 7, 10, 15, 12, 20, 1, 21]
-let arr = [1, 2, 3, 4, 5];
+
+let arr = [2, 5, 7, 10, 15, 12, 20, 1, 5, 6, 21];
 let temp = new Tree(arr);
+console.log(temp.include(2));
+console.log(temp.find(2));
+temp.insert(12);
+console.log(temp.include(12));
 console.log(temp.levelOrder());
+console.log(
+    temp.levelOrderCallBackFunction((value) => {
+        console.log(value);
+    })
+);
 console.log(temp.inOrder());
 console.log(temp.preOrder());
 console.log(temp.postOrder());
 console.log(temp.height());
 console.log(temp.depth(1));
 console.log(temp.isBalanced());
-temp.delete(4);
+temp.delete(1);
+temp.delete(2);
 temp.delete(5);
-console.log(temp.height());
+temp.delete(6);
 console.log(temp.isBalanced());
 temp.reBalance();
 console.log(temp.inOrder());
