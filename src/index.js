@@ -9,18 +9,17 @@ class Node {
 class Tree {
     constructor(dataArr) {
         dataArr = this.cleanArr(dataArr);
-        this.root = this.buildTree(dataArr);
-        console.log(this.root);
+        this.root = this.buildTree(dataArr, 0, dataArr.length - 1);
     }
     cleanArr(dataArr) {
         return [...new Set(dataArr)].sort((a, b) => a - b);
     }
-    buildTree(dataArr) {
-        if (dataArr.length <= 0) return null;
-        let midPoint = Math.floor(dataArr.length / 2);
+    buildTree(dataArr, start, end) {
+        if (start > end) return null;
+        let midPoint = Math.floor((start + end) / 2);
         let rootNode = new Node(dataArr[midPoint]);
-        rootNode.left = this.buildTree(dataArr.slice(0, midPoint));
-        rootNode.right = this.buildTree(dataArr.slice(midPoint + 1));
+        rootNode.left = this.buildTree(dataArr, start, midPoint - 1);
+        rootNode.right = this.buildTree(dataArr, midPoint + 1, end);
         return rootNode;
     }
     include(value) {
@@ -160,12 +159,13 @@ class Tree {
     }
     reBalance() {
         let arr = this.inOrder();
-        this.root = this.buildTree(arr);
+        this.root = this.buildTree(arr, 0, arr.length);
     }
 }
 
 let arr = [2, 5, 7, 10, 15, 12, 20, 1, 5, 6, 21];
 let temp = new Tree(arr);
+console.log(temp.inOrder());
 console.log(temp.include(2));
 console.log(temp.find(2));
 temp.insert(12);
